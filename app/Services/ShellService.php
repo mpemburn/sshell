@@ -11,6 +11,7 @@ class ShellService
 
     public function __construct()
     {
+        return;
         $remote = env('DEFAULT_REMOTE');
         $key =  env($remote . '_PRIVATE_KEY_PATH');
         $key = PublicKeyLoader::load(file_get_contents($key));

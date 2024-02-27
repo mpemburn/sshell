@@ -8,7 +8,14 @@
                 <option value="{{ $id }}">{{ $command }}</option>
             @endforeach
         </select>
-        <input class="commands" type="search" wire:model="modifier" placeholder="< Modify this command">
+        <span id="modify">
+            <input class="commands" type="search" wire:model="modifier" placeholder="< Modify this command">
+            <ul id="modifiers">
+                @foreach($items as $item)
+                    <li wire:click="handleItemClick('{{ $item }}')">{{ $item }}</li>
+                @endforeach
+            </ul>
+        </span>
         <button class="term-btn" wire:click="modify">Modify</button>
     </div>
     {{-- This is the terminal: --}}

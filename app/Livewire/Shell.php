@@ -14,6 +14,7 @@ class Shell extends Component
     public string $command;
     public string $modifier;
     public int $commandId = 0;
+    public $items = ['| grep UN', 'Item 2', 'Item 3'];
     public function __construct()
     {
         $this->service = new ShellService();
@@ -50,6 +51,11 @@ class Shell extends Component
         $this->output = $this->service->execute(
             $command->commands . $this->modifier
         );
+    }
+
+    public function handleItemClick(string $item)
+    {
+        Log::debug($item);
     }
 
     public function render(): mixed

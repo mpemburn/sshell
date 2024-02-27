@@ -1,4 +1,5 @@
 #controls {
+    position: relative;
     padding: 3px;
 }
 
@@ -11,6 +12,26 @@
     min-height: 600px;
     color: #ffffff;
     background-color: #000000;
+}
+
+#modify {
+    position: relative;
+}
+#modifiers {
+    position: absolute;
+    top: 1.45rem;
+    left: 0;
+    padding: 5px;
+    min-width: 12rem;
+    z-index: 99;
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    li {
+        cursor: pointer;
+        &:hover {
+            background-color: #eeeeee;
+        }
+    }
 }
 
 .no-margin {
