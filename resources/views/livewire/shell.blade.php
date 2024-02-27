@@ -9,12 +9,14 @@
             @endforeach
         </select>
         <span id="modify">
-            <input class="commands" type="search" wire:model="modifier" placeholder="< Modify this command">
-            <ul id="modifiers">
-                @foreach($items as $item)
-                    <li wire:click="handleItemClick('{{ $item }}')">{{ $item }}</li>
-                @endforeach
+            <input class="commands" type="search" wire:model="modifier" wire:keyup="suggest" placeholder="< Modify this command">
+            @if ($showModifiers)
+                <ul id="modifiers">
+                @foreach($modifiers as $modifier)
+                        <li wire:click="selectModifier('{{ $modifier }}')">{{ $modifier }}</li>
+                    @endforeach
             </ul>
+            @endif
         </span>
         <button class="term-btn" wire:click="modify">Modify</button>
     </div>

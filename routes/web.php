@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HomeController;
 use App\Models\Command;
+use App\Models\Modifier;
 use Illuminate\Support\Facades\Route;
 use phpseclib3\Crypt\PublicKeyLoader;
 use phpseclib3\Net\SSH2;
@@ -18,6 +19,10 @@ use phpseclib3\Net\SSH2;
 */
 
 Route::get('/dev', function () {
+    $modifier = 'grep';
+    $mods = Modifier::where('command', 'LIKE', '%' . $modifier . '%')
+        ->pluck('command');
+    dd($mods->toArray());
     // Do what thou wilt
 });
 
