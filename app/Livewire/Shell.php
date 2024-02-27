@@ -12,7 +12,7 @@ class Shell extends Component
 {
     private ShellService $service;
     public string $output;
-    public string $command;
+    public string $command = '';
     public string $modifier = '';
     public array $modifiers = [];
     public bool $showModifiers = false;
@@ -24,6 +24,11 @@ class Shell extends Component
 
     public function submit(): void
     {
+        if ($this->command === '') {
+            $this->output = 'Please enter a command.';
+            return;
+        }
+
         $this->output = $this->service->execute($this->command);
     }
 
@@ -31,11 +36,15 @@ class Shell extends Component
     {
         if ($this->modifier) {
             $this->modify();
-
             return;
         }
 
         $command = Command::find($this->commandId);
+
+        if (! $command) {
+            $this->output = 'No Command selected.';
+            return;
+        }
 
         $this->output = $this->service->execute($command->commands);
     }
@@ -44,7 +53,6 @@ class Shell extends Component
     {
         if ($this->modifier === '') {
             $this->runCommand();
-
             return;
         }
 

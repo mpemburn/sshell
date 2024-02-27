@@ -17,6 +17,7 @@
 #modify {
     position: relative;
 }
+
 #modifiers {
     position: absolute;
     top: 1.45rem;
@@ -49,4 +50,7 @@
     background-color: #0000dd;
     border: 1px solid #0000dd;
     border-radius: 3px;
+    &:hover {
+        background-color: #000099;
+    }
 }
