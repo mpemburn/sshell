@@ -1,0 +1,31 @@
+#controls {
+    padding: 3px;
+}
+
+#command {
+    width: 15rem;
+}
+
+#terminal {
+    padding: 0.5rem;
+    min-height: 600px;
+    color: #ffffff;
+    background-color: #000000;
+}
+
+.no-margin {
+    padding: 0 !important;
+}
+
+.commands {
+    height: 1.7rem;
+}
+
+.term-btn {
+    position: relative;
+    top: -1px;
+    color: #ffffff;
+    background-color: #0000dd;
+    border: 1px solid #0000dd;
+    border-radius: 3px;
+}
