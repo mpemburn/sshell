@@ -1,6 +1,6 @@
 <div>
     <div id="controls">
-        <input id="command" class="commands" type="text" wire:model="command" placeholder="Enter a command">
+        <input id="command" class="inputs" type="text" wire:model="command" placeholder="Enter a command">
         <button class="term-btn" wire:click="submit">Submit</button>
         <select class="scripts" wire:model="scriptId" wire:change="runScript">
             <option value="0">Select a Script</option>
@@ -9,7 +9,7 @@
             @endforeach
         </select>
         <span id="modify">
-            <input class="commands" type="search" wire:model="modifier" wire:keyup="suggest" wire:click="suggest" placeholder="< Modify this command">
+            <input class="inputs" type="search" wire:model="modifier" wire:keyup="suggest" wire:click="suggest" placeholder="< Modify this command">
             @if ($showModifiers)
                 <ul id="modifiers">
                 @foreach($modifiers as $modifier)
@@ -24,7 +24,7 @@
                  src="https://cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" alt="" width="24"
                  height="24">
         </div>
-        <button class="term-btn clear-btn" wire:click="clear">Clear</button>
+        <button class="term-btn float-right" wire:click="clear">Clear</button>
     </div>
     {{-- This is the terminal: --}}
     <pre id="terminal">{{ $output }}</pre>

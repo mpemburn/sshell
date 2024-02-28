@@ -11,8 +11,7 @@ class ScriptEdit extends Component
     public int $scriptId = 0;
     public string $editor = '';
     public string $scriptTitle = '';
-    public bool $showExisting = true;
-    public bool $showNewTitle = false;
+    public bool $showDelete = false;
     public bool $showNewButton = true;
 
     public function editScript(): void
@@ -29,7 +28,8 @@ class ScriptEdit extends Component
             return;
         }
         $this->scriptTitle = $script->script;
-        $this->editor = $script->scripts;
+        $this->editor = $script->commands;
+        $this->showDelete = true;
     }
 
     public function save(): void
@@ -49,15 +49,39 @@ class ScriptEdit extends Component
 
     public function newScript(): void
     {
-        $this->showExisting = false;
-        $this->showNewTitle = true;
         $this->showNewButton = false;
         $this->scriptId = 0;
+        $this->scriptTitle = '';
+        $this->editor = '';
+        $this->dispatch('focusTitle');
     }
 
     public function saveNewScript(): void
     {
+        Script::create([
+            'script' => $this->scriptTitle,
+            'commands' => $this->editor
+        ]);
 
+        $this->scriptTitle = '';
+        $this->editor = '';
+        $this->showNewButton = true;
+    }
+
+    public function delete(): void
+    {
+        $script = Script::find($this->scriptId);
+        $script->delete();
+        $this->scriptTitle = '';
+        $this->editor = '';
+    }
+
+    public function clear(): void
+    {
+        $this->scriptId = 0;
+        $this->scriptTitle = '';
+        $this->editor = '';
+        $this->showDelete = false;
     }
 
     public function render()

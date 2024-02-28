@@ -30,8 +30,8 @@ class HomeController extends Controller
         return view('home', ['connection' => $connection]);
     }
 
-    public function editCommands()
+    public function editScripts()
     {
-        return view('command-edit');
+        return view('script-edit');
     }
 }
