@@ -3,6 +3,8 @@
 use App\Http\Controllers\HomeController;
 use App\Models\Command;
 use App\Models\Modifier;
+use App\Services\ShellService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use phpseclib3\Crypt\PublicKeyLoader;
 use phpseclib3\Net\SSH2;
@@ -19,10 +21,20 @@ use phpseclib3\Net\SSH2;
 */
 
 Route::get('/dev', function () {
-    $modifier = 'grep';
-    $mods = Modifier::where('command', 'LIKE', '%' . $modifier . '%')
-        ->pluck('command');
-    dd($mods->toArray());
+    $command = 'rm rm_test.txt';
+    $disallowed = false;
+    !d(ShellService::DISALLOWED_COMMANDS);
+    collect(explode(' ', $command))
+        ->each(function ($word) use (&$disallowed) {
+
+            if (in_array($word, ShellService::DISALLOWED_COMMANDS)) {
+                $disallowed = true;
+            }
+        });
+
+    if ($disallowed) {
+        echo 'zap';
+    }
     // Do what thou wilt
 });
 

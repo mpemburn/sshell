@@ -5,13 +5,12 @@ namespace App\Livewire;
 use App\Models\Command;
 use App\Models\Modifier;
 use App\Services\ShellService;
-use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class Shell extends Component
 {
     private ShellService $service;
-    public string $output;
+    public string $output = '';
     public string $command = '';
     public string $modifier = '';
     public array $modifiers = [];
@@ -39,6 +38,10 @@ class Shell extends Component
             return;
         }
 
+        if (! $this->commandId) {
+            return;
+        }
+
         $command = Command::find($this->commandId);
 
         if (! $command) {
@@ -46,6 +49,7 @@ class Shell extends Component
             return;
         }
 
+        $this->loading = true;
         $this->output = $this->service->execute($command->commands);
     }
 
@@ -61,24 +65,39 @@ class Shell extends Component
         $this->saveModifier($this->modifier);
 
         $this->output = $this->service->execute(
-            $command->commands . $this->modifier
+            $command->commands . ' ' . $this->modifier
         );
     }
 
-    public function selectModifier(string $modifier): void
+    // Build a list of modifiers based on input field contents
+    public function suggest(): void
     {
-        $this->modifier = $modifier;
-        $this->showModifiers = false;
-    }
-
-    public function suggest()
-    {
+        if ($this->modifier === '') {
+            $this->showModifiers = false;
+            return;
+        }
         $mods = Modifier::where('command', 'LIKE', '%' . $this->modifier . '%')
             ->pluck('command');
 
         $this->modifiers = $mods->toArray();
 
         $this->showModifiers = count($this->modifiers) > 0;
+    }
+
+    // A modifier (e.g., '| grep UN') was selected from dropdown
+    public function selectModifier(string $modifier): void
+    {
+        $this->modifier = $modifier;
+        $this->showModifiers = false;
+    }
+
+
+    public function clear(): void
+    {
+        $this->commandId = 0;
+        $this->command = '';
+        $this->modifier = '';
+        $this->output = '';
     }
 
     public function render(): mixed
