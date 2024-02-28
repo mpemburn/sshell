@@ -29,4 +29,9 @@ class HomeController extends Controller
 
         return view('home', ['connection' => $connection]);
     }
+
+    public function editCommands()
+    {
+        return view('command-edit');
+    }
 }

@@ -2,8 +2,9 @@
 
 namespace App\Livewire;
 
-use App\Models\Command;
+use App\Models\Script;
 use App\Models\Modifier;
+use App\Services\ScriptService;
 use App\Services\ShellService;
 use Livewire\Component;
 
@@ -15,7 +16,7 @@ class Shell extends Component
     public string $modifier = '';
     public array $modifiers = [];
     public bool $showModifiers = false;
-    public int $commandId = 0;
+    public int $scriptId = 0;
     public function __construct()
     {
         $this->service = new ShellService();
@@ -31,41 +32,41 @@ class Shell extends Component
         $this->output = $this->service->execute($this->command);
     }
 
-    public function runCommand(): void
+    public function runScript(): void
     {
         if ($this->modifier) {
             $this->modify();
             return;
         }
 
-        if (! $this->commandId) {
+        if ($this->scriptId === 0) {
             return;
         }
 
-        $command = Command::find($this->commandId);
+        $script = Script::find($this->scriptId);
 
-        if (! $command) {
-            $this->output = 'No Command selected.';
+        if (! $script) {
+            $this->output = 'No Script selected.';
             return;
         }
 
         $this->loading = true;
-        $this->output = $this->service->execute($command->commands);
+        $this->output = $this->service->execute($script->commands);
     }
 
     public function modify(): void
     {
         if ($this->modifier === '') {
-            $this->runCommand();
+            $this->runScript();
             return;
         }
 
-        $command = Command::find($this->commandId);
+        $script = Script::find($this->scriptId);
 
         $this->saveModifier($this->modifier);
 
         $this->output = $this->service->execute(
-            $command->commands . ' ' . $this->modifier
+            $script->commands . ' ' . $this->modifier
         );
     }
 
@@ -94,7 +95,7 @@ class Shell extends Component
 
     public function clear(): void
     {
-        $this->commandId = 0;
+        $this->scriptId = 0;
         $this->command = '';
         $this->modifier = '';
         $this->output = '';
@@ -102,11 +103,9 @@ class Shell extends Component
 
     public function render(): mixed
     {
-        $commands = Command::all()
-            ->pluck('script', 'id')
-            ->toArray();
+        $scripts = (new ScriptService())->getScriptList();
 
-        return view('livewire.shell', ['commands' => $commands]);
+        return view('livewire.shell', ['scripts' => $scripts]);
     }
 
     protected function saveModifier(string $modifier)

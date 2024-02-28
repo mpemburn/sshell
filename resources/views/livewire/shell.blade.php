@@ -2,10 +2,10 @@
     <div id="controls">
         <input id="command" class="commands" type="text" wire:model="command" placeholder="Enter a command">
         <button class="term-btn" wire:click="submit">Submit</button>
-        <select class="commands" wire:model="commandId" wire:change="runCommand">
-            <option value="">Select a Command</option>
-            @foreach($commands as $id => $command)
-                <option value="{{ $id }}">{{ $command }}</option>
+        <select class="scripts" wire:model="scriptId" wire:change="runScript">
+            <option value="0">Select a Script</option>
+            @foreach($scripts as $id => $script)
+                <option value="{{ $id }}">{{ $script }}</option>
             @endforeach
         </select>
         <span id="modify">
