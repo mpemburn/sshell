@@ -50,6 +50,7 @@ class ScriptEdit extends Component
     public function newScript(): void
     {
         $this->showNewButton = false;
+        $this->showDelete = false;
         $this->scriptId = 0;
         $this->scriptTitle = '';
         $this->editor = '';
@@ -82,6 +83,7 @@ class ScriptEdit extends Component
         $this->scriptTitle = '';
         $this->editor = '';
         $this->showDelete = false;
+        $this->showNewButton = true;
     }
 
     public function render()
