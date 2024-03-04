@@ -19,6 +19,7 @@
             @endif
         </span>
         <button class="term-btn" wire:click="modify">Modify</button>
+        <input type="checkbox" wire:model="shouldSaveModifier" wire:click="saveModifier" name="save_modifier"/> Save modifier
         <div wire:loading>
             <img id="loading"
                  src="https://cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" alt="" width="24"

@@ -15,6 +15,7 @@ class Shell extends Component
     public string $command = '';
     public string $modifier = '';
     public array $modifiers = [];
+    public bool $shouldSaveModifier = false;
     public bool $showModifiers = false;
     public int $scriptId = 0;
     public function __construct()
@@ -63,7 +64,9 @@ class Shell extends Component
 
         $script = Script::find($this->scriptId);
 
-        $this->saveModifier($this->modifier);
+        if ($this->shouldSaveModifier) {
+            $this->saveModifier();
+        }
 
         $this->output = $this->service->execute(
             $script->commands . ' ' . $this->modifier
@@ -108,16 +111,16 @@ class Shell extends Component
         return view('livewire.shell', ['scripts' => $scripts]);
     }
 
-    protected function saveModifier(string $modifier)
+    public function saveModifier()
     {
-        $mod = Modifier::where('command', $modifier)->first();
+        $mod = Modifier::where('command', $this->modifier)->first();
 
         if ($mod) {
             return;
         }
 
         Modifier::create([
-            'command' => $modifier
+            'command' => $this->modifier
         ]);
     }
 }

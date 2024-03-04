@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('modifiers', function (Blueprint $table) {
             $table->id();
-            $table->string('command', 50);
+            $table->string('command', 255);
             $table->timestamps();
         });
     }
