@@ -27,9 +27,13 @@ class HomeController extends Controller
         $remote = env('DEFAULT_REMOTE');
         $connection = (new ShellService())->getConnection($remote);
 
-        return view('home', ['connection' => $connection]);
+        return view('shell', ['connection' => $connection]);
     }
 
+    public function editModifiers()
+    {
+        return view('modifier-edit');
+    }
     public function editScripts()
     {
         return view('script-edit');

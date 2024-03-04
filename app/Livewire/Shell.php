@@ -111,7 +111,7 @@ class Shell extends Component
         return view('livewire.shell', ['scripts' => $scripts]);
     }
 
-    public function saveModifier()
+    public function saveModifier():void
     {
         $mod = Modifier::where('command', $this->modifier)->first();
 
@@ -122,5 +122,7 @@ class Shell extends Component
         Modifier::create([
             'command' => $this->modifier
         ]);
+
+        $this->shouldSaveModifier = false;
     }
 }
