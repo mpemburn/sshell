@@ -20,7 +20,7 @@ class Shell extends Component
     public int $scriptId = 0;
     public function __construct()
     {
-        $this->service = new ShellService();
+        $this->service = new ShellService('Pagely');
     }
 
     public function submit(): void
