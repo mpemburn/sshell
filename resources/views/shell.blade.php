@@ -13,15 +13,13 @@
                             <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
                     </select>
+                    <?php App\Services\ShellService::setConnection($_REQUEST['connect'] ?? ''); ?>
                 </div>
 
                 <div class="card-body no-margin">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
+                    @if(App\Services\ShellService::connectionExists())
+                        <livewire:shell/>
                     @endif
-                    <livewire:shell  :connect="$connect"/>
                 </div>
             </div>
         </div>

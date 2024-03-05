@@ -1,6 +1,6 @@
 <div>
     <div id="controls">
-        <input id="command" class="inputs" type="text" wire:model="command" placeholder="Enter a command">
+        <input id="command" class="inputs" type="text" wire:model="command" wire:keydown.enter="submit" placeholder="Enter a command">
         <button class="term-btn" wire:click="submit">Submit</button>
         <select class="scripts" wire:model="scriptId" wire:change="runScript">
             <option value="0">Select a Script</option>

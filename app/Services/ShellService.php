@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Connection;
+use Illuminate\Support\Facades\Session;
 use phpseclib3\Crypt\PublicKeyLoader;
 use phpseclib3\Net\SSH2;
 
@@ -19,27 +20,37 @@ class ShellService
     protected string $output = '';
     protected string $displayName;
 
-    public function __construct(string $connect)
-    {
-        $this->connect($connect);
-//        $remote = env('DEFAULT_REMOTE');
-//        $key =  env($remote . '_PRIVATE_KEY_PATH');
-//        $key = PublicKeyLoader::load(file_get_contents($key));
-//
-//        $this->ssh = new SSH2(env($remote . '_SERVER_IP_ADDRESS'));
-//        if (!$this->ssh->login(env($remote . '_USER_NAME'), $key)) {
-//            throw new Exception('Login failed');
-//        }
-    }
-
     public static function getConnections(): array
     {
         return Connection::all()->pluck('id', 'name')->toArray();
     }
 
+    public static function connectionExists(): bool
+    {
+        $connectName = self::getConnection();
+
+        $connection = Connection::where('name', $connectName)->first();
+
+        return ! empty($connection);
+    }
+
+    public static function setConnection(string $connectName): void
+    {
+        Session::put('connection', $connectName);
+    }
+
+    public static function getConnection(): string
+    {
+        return Session::get('connection');
+    }
+
     public function connect(string $connectName): void
     {
         $connection = Connection::where('name', $connectName)->first();
+
+        if ($connection === null) {
+            return;
+        }
 
         $key =  $connection->key_path;
         $key = PublicKeyLoader::load(file_get_contents($key));
@@ -52,6 +63,7 @@ class ShellService
         $this->displayName = $connection->host . '@' . $connection->user;
 
     }
+
     public function execute(string $command): bool|string
     {
         $command = self::COMMAND_ALIASES[$command] ?? $command;
@@ -63,10 +75,10 @@ class ShellService
         return $this->ssh->exec($command);
     }
 
-    public function getConnection(string $connectName): string
-    {
-        return $this->displayName;
-    }
+//    public function getConnection(string $connectName): string
+//    {
+//        return $this->displayName;
+//    }
 
     protected function isDisallowed(string $command): bool
     {

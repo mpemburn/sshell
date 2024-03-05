@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HomeController;
 use App\Models\Command;
+use App\Models\Connection;
 use App\Models\Modifier;
 use App\Services\ShellService;
 use Illuminate\Support\Facades\Log;
@@ -21,20 +22,10 @@ use phpseclib3\Net\SSH2;
 */
 
 Route::get('/dev', function () {
-    $command = 'rm rm_test.txt';
-    $disallowed = false;
-    !d(ShellService::DISALLOWED_COMMANDS);
-    collect(explode(' ', $command))
-        ->each(function ($word) use (&$disallowed) {
+    $connectName = 'Bogusx';
+    $connection = Connection::where('name', $connectName)->first();
+    !d($connection);
 
-            if (in_array($word, ShellService::DISALLOWED_COMMANDS)) {
-                $disallowed = true;
-            }
-        });
-
-    if ($disallowed) {
-        echo 'zap';
-    }
     // Do what thou wilt
 });
 

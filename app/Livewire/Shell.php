@@ -2,10 +2,13 @@
 
 namespace App\Livewire;
 
+use App\Models\Connection;
 use App\Models\Script;
 use App\Models\Modifier;
 use App\Services\ScriptService;
 use App\Services\ShellService;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class Shell extends Component
@@ -18,9 +21,11 @@ class Shell extends Component
     public bool $shouldSaveModifier = false;
     public bool $showModifiers = false;
     public int $scriptId = 0;
+
     public function __construct()
     {
-        $this->service = new ShellService('Pagely');
+        $this->service = new ShellService();
+        $this->service->connect(ShellService::getConnection());
     }
 
     public function submit(): void
@@ -95,6 +100,20 @@ class Shell extends Component
         $this->showModifiers = false;
     }
 
+    public function saveModifier():void
+    {
+        $mod = Modifier::where('command', $this->modifier)->first();
+
+        if ($mod) {
+            return;
+        }
+
+        Modifier::create([
+            'command' => $this->modifier
+        ]);
+
+        $this->shouldSaveModifier = false;
+    }
 
     public function clear(): void
     {
@@ -109,20 +128,5 @@ class Shell extends Component
         $scripts = (new ScriptService())->getScriptList();
 
         return view('livewire.shell', ['scripts' => $scripts]);
-    }
-
-    public function saveModifier():void
-    {
-        $mod = Modifier::where('command', $this->modifier)->first();
-
-        if ($mod) {
-            return;
-        }
-
-        Modifier::create([
-            'command' => $this->modifier
-        ]);
-
-        $this->shouldSaveModifier = false;
     }
 }
