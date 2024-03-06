@@ -42,9 +42,18 @@ class ShellService
 
     public static function getConnection(): string
     {
-        Log::debug(Session::get('connection'));
         return Session::get('connection');
     }
+
+    public static function getConnectionId(): ?int
+    {
+        $connectName = self::getConnection();
+
+        $connection = Connection::where('name', $connectName)->first();
+
+        return $connection ? $connection->id : null;
+    }
+
 
     public function connect(string $connectName): void
     {

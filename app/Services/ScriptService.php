@@ -6,9 +6,9 @@ use App\Models\Script;
 
 class ScriptService
 {
-    public function getScriptList(): array
+    public function getScriptList(int $connectionId): array
     {
-        return Script::all()
+        return Script::where('host_id', $connectionId)
             ->pluck('script', 'id')
             ->toArray();
     }

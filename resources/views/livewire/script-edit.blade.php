@@ -1,6 +1,12 @@
 <div>
     <div id="controls">
-        <select class="scripts" wire:model="scriptId" wire:change="editScript">
+        <select class="edit-select" wire:model="connectionId" wire:change="setConnectionId">
+            <option value="0">Select a Connection</option>
+            @foreach(App\Services\ShellService::getConnections() as $name => $id)
+                <option value="{{ $id }}">{{ $name }}</option>
+            @endforeach
+        </select>
+        <select class="edit-select" wire:model="scriptId" wire:change="editScript">
             <option value="0">Select a Script</option>
             @foreach($scripts as $id => $script)
                 <option value="{{ $id }}">{{ $script }}</option>
@@ -8,6 +14,11 @@
         </select>
         <input type="text" wire:model="scriptTitle" data-name="scriptTitle" placeholder="Script title">
         <button class="term-btn" wire:click="save">Save</button>
+        <div wire:loading>
+            <img id="loading"
+                 src="https://cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" alt="" width="24"
+                 height="24">
+        </div>
         @if($showNewButton)
             <button class="term-btn" wire:click="newScript" wire:click="focusTitle">New</button>
         @endif

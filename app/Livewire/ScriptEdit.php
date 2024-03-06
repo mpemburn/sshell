@@ -2,13 +2,17 @@
 
 namespace App\Livewire;
 
+use App\Models\Connection;
 use App\Models\Script;
 use App\Services\ScriptService;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class ScriptEdit extends Component
 {
+    public int $connectionId = 0;
     public int $scriptId = 0;
+    public array $scripts = [];
     public string $editor = '';
     public string $scriptTitle = '';
     public bool $showDelete = false;
@@ -34,6 +38,7 @@ class ScriptEdit extends Component
 
     public function save(): void
     {
+        $this->loading = true;
         if ($this->scriptId === 0) {
             $this->saveNewScript();
             return;
@@ -42,9 +47,28 @@ class ScriptEdit extends Component
         $script = Script::find($this->scriptId);
 
         $script->update([
+            'host_id' => $this->connectionId,
             'script' => $this->scriptTitle,
-            'scripts' => $this->editor
+            'commands' => $this->editor
         ]);
+
+        $this->loadScripts();
+        $this->loading = false;
+    }
+
+    public function setConnectionId(): void
+    {
+        if ($this->connectionId === 0) {
+            return;
+        }
+
+        $connection = Connection::find($this->connectionId);
+        if (! $connection) {
+            $this->scripts = [];
+            return;
+        }
+
+        $this->loadScripts();
     }
 
     public function newScript(): void
@@ -60,6 +84,7 @@ class ScriptEdit extends Component
     public function saveNewScript(): void
     {
         Script::create([
+            'host_id' => $this->connectionId,
             'script' => $this->scriptTitle,
             'commands' => $this->editor
         ]);
@@ -67,14 +92,19 @@ class ScriptEdit extends Component
         $this->scriptTitle = '';
         $this->editor = '';
         $this->showNewButton = true;
+        $this->loadScripts();
+
     }
 
     public function delete(): void
     {
+        $this->loading = true;
         $script = Script::find($this->scriptId);
         $script->delete();
         $this->scriptTitle = '';
         $this->editor = '';
+        $this->loadScripts();
+        $this->loading = false;
     }
 
     public function clear(): void
@@ -86,10 +116,13 @@ class ScriptEdit extends Component
         $this->showNewButton = true;
     }
 
+    protected function loadScripts()
+    {
+        $this->scripts = (new ScriptService())->getScriptList($this->connectionId);
+    }
+
     public function render()
     {
-        $scripts = (new ScriptService())->getScriptList();
-
-        return view('livewire.script-edit', ['scripts' => $scripts]);
+        return view('livewire.script-edit');
     }
 }

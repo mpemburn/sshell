@@ -1,6 +1,6 @@
 <div>
     <div id="controls">
-        <select class="modifiers" wire:model="modifierId" wire:change="editModifier">
+        <select class="modifiers edit-select" wire:model="modifierId" wire:change="editModifier">
             <option value="0">Select a Modifier</option>
             @foreach($modifiers as $id => $modifier)
                 <option value="{{ $id }}">{{ $modifier }}</option>

@@ -125,7 +125,7 @@ class Shell extends Component
 
     public function render(): mixed
     {
-        $scripts = (new ScriptService())->getScriptList();
+        $scripts = (new ScriptService())->getScriptList(ShellService::getConnectionId());
 
         return view('livewire.shell', ['scripts' => $scripts]);
     }

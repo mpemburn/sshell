@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('scripts', function (Blueprint $table) {
             $table->id();
+            $table->integer('host_id');
             $table->string('script', 50);
             $table->text('commands');
             $table->timestamps();

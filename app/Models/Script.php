@@ -10,6 +10,7 @@ class Script extends Model
     use HasFactory;
 
     protected $fillable = [
+        'host_id',
         'script',
         'commands'
     ];
