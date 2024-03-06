@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Connection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use phpseclib3\Crypt\PublicKeyLoader;
 use phpseclib3\Net\SSH2;
@@ -41,6 +42,7 @@ class ShellService
 
     public static function getConnection(): string
     {
+        Log::debug(Session::get('connection'));
         return Session::get('connection');
     }
 
@@ -53,7 +55,7 @@ class ShellService
         }
 
         $key =  $connection->key_path;
-        $key = PublicKeyLoader::load(file_get_contents($key));
+        $key = PublicKeyLoader::load(file_get_contents($key), $connection->pass_phrase);
 
         $this->ssh = new SSH2($connection->host);
         if (!$this->ssh->login($connection->user, $key)) {

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('host');
             $table->string('user');
             $table->string('key_path');
+            $table->string('pass_phrase');
             $table->timestamps();
         });
     }

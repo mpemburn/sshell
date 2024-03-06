@@ -14,5 +14,6 @@ class Connection extends Model
         'host',
         'user',
         'key_path',
+        'pass_phrase',
     ];
 }
