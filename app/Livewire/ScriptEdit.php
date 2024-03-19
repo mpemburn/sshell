@@ -123,6 +123,6 @@ class ScriptEdit extends Component
 
     public function render()
     {
-        return view('livewire.script-edit');
+        return view('livewire.script-crud');
     }
 }

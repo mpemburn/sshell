@@ -35,6 +35,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/shell', [HomeController::class, 'index'])->name('shell');
-Route::get('/script_edit', [HomeController::class, 'editScripts'])->name('script_edit');
-Route::get('/modifier_edit', [HomeController::class, 'editModifiers'])->name('modifier_edit');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/connection', [HomeController::class, 'editConnection'])->name('connection');
+Route::get('/script', [HomeController::class, 'editScripts'])->name('script');
+Route::get('/modifier', [HomeController::class, 'editModifiers'])->name('modifier');

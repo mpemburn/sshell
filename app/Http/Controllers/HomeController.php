@@ -29,12 +29,16 @@ class HomeController extends Controller
         return view('shell', ['connect' => $connectionName]);
     }
 
+    public function editConnection()
+    {
+        return view('connection');
+    }
     public function editModifiers()
     {
-        return view('modifier-edit');
+        return view('modifier');
     }
     public function editScripts()
     {
-        return view('script-edit');
+        return view('script');
     }
 }

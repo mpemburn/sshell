@@ -82,6 +82,6 @@ class ModifierEdit extends Component
     {
         $modifiers = (new ModifierService())->getModifierList();
 
-        return view('livewire.modifier-edit', ['modifiers' => $modifiers]);
+        return view('livewire.modifier-crud', ['modifiers' => $modifiers]);
     }
 }

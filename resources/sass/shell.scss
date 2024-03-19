@@ -2,6 +2,7 @@ li.nav-item {
     margin-left: 0.5rem;
     list-style: none;
 }
+
 #connections {
     width: 15rem;
     height: 2rem;
@@ -85,4 +86,17 @@ li.nav-item {
     height: 400px;
     padding: 5px;
     font-family: "Andale Mono", serif;
+}
+
+#connection_editor {
+    input {
+        width: 95%;
+    }
+    &> div.required {
+        color: #cc0000;
+        margin: 2px;
+    }
+    &> div.optional {
+        margin: 2px 2px 4px 12px;
+    }
 }
