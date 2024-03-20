@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Connection;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use phpseclib3\Crypt\PublicKeyLoader;
@@ -54,25 +55,35 @@ class ShellService
         return $connection ? $connection->id : null;
     }
 
+    public static function getConnectionName(): string
+    {
+        $connectName = self::getConnection();
 
-    public function connect(string $connectName): void
+        return $connectName ?: 'Unknown';
+    }
+
+
+    public function connect(string $connectName): bool
     {
         $connection = Connection::where('name', $connectName)->first();
+        $key =  $connection->key_path;
 
-        if ($connection === null) {
-            return;
+        if ($connection === null || ! file_exists($key)) {
+            return false;
         }
 
-        $key =  $connection->key_path;
         $key = PublicKeyLoader::load(file_get_contents($key), $connection->pass_phrase);
 
         $this->ssh = new SSH2($connection->host);
         if (!$this->ssh->login($connection->user, $key)) {
             throw new Exception('Login failed');
+
+            return false;
         }
 
         $this->displayName = $connection->host . '@' . $connection->user;
 
+        return true;
     }
 
     public function execute(string $command): bool|string
@@ -85,11 +96,6 @@ class ShellService
 
         return $this->ssh->exec($command);
     }
-
-//    public function getConnection(string $connectName): string
-//    {
-//        return $this->displayName;
-//    }
 
     protected function isDisallowed(string $command): bool
     {

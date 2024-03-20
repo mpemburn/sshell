@@ -16,6 +16,20 @@ li.nav-item {
 #controls {
     position: relative;
     padding: 5px;
+
+    &.disabled {
+        &:before {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 999;
+            content: ' ';
+            background-color: #ffffff;
+            opacity: 0.5;
+        }
+    }
 }
 
 #command {
@@ -27,6 +41,10 @@ li.nav-item {
     min-height: 600px;
     color: #ffffff;
     background-color: #000000;
+}
+
+#scripts {
+    height: 1.8rem;
 }
 
 #modify {
@@ -73,6 +91,9 @@ li.nav-item {
     }
     &:hover {
         background-color: #000099;
+    }
+    &:disabled {
+        opacity: 0.5;
     }
 }
 .float-right {

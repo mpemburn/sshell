@@ -2,30 +2,36 @@
 
 namespace App\Livewire;
 
-use App\Models\Connection;
 use App\Models\Script;
 use App\Models\Modifier;
 use App\Services\ScriptService;
 use App\Services\ShellService;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class Shell extends Component
 {
-    private ShellService $service;
+    protected ShellService $service;
+    protected ScriptService $scriptService;
+
+    public bool $connected = false;
     public string $output = '';
     public string $command = '';
     public string $modifier = '';
     public array $modifiers = [];
+    public bool $loading= false;
     public bool $shouldSaveModifier = false;
     public bool $showModifiers = false;
+    public bool $disableModify = false;
     public int $scriptId = 0;
 
     public function __construct()
     {
         $this->service = new ShellService();
-        $this->service->connect(ShellService::getConnection());
+        $this->scriptService = new ScriptService();
+        if ($this->service->connect(ShellService::getConnection())) {
+            $this->connected = true;
+        }
     }
 
     public function submit(): void
@@ -40,6 +46,7 @@ class Shell extends Component
 
     public function runScript(): void
     {
+        $this->disableModify = true;
         if ($this->modifier) {
             $this->modify();
             return;
@@ -56,6 +63,7 @@ class Shell extends Component
             return;
         }
 
+        $this->disableModify = false;
         $this->loading = true;
         $this->output = $this->service->execute($script->commands);
     }
@@ -73,9 +81,11 @@ class Shell extends Component
             $this->saveModifier();
         }
 
-        $this->output = $this->service->execute(
-            $script->commands . ' ' . $this->modifier
-        );
+        if ($script) {
+            $this->output = $this->service->execute(
+                $script->commands . ' ' . $this->modifier
+            );
+        }
     }
 
     // Build a list of modifiers based on input field contents
@@ -125,7 +135,9 @@ class Shell extends Component
 
     public function render(): mixed
     {
-        $scripts = (new ScriptService())->getScriptList(ShellService::getConnectionId());
+        $scripts = $this->scriptService->getScriptList(ShellService::getConnectionId());
+
+        //$this->output = 'Connected to ' . ShellService::getConnectionName();
 
         return view('livewire.shell', ['scripts' => $scripts]);
     }
