@@ -75,11 +75,15 @@ class ShellService
         $key = PublicKeyLoader::load(file_get_contents($key), $connection->pass_phrase);
 
         $this->ssh = new SSH2($connection->host);
-        if (!$this->ssh->login($connection->user, $key)) {
-            throw new Exception('Login failed');
-
-            return false;
+        $this->ssh->setTimeout(10);
+        try {
+            $this->ssh->login($connection->user, $key);
+        } catch (Exception $e) {
+            Log::debug($e->getMessage());
         }
+//        if (! $this->ssh->login($connection->user, $key)) {
+//            throw new Exception('Login failed');
+//        }
 
         $this->displayName = $connection->host . '@' . $connection->user;
 

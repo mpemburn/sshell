@@ -3,10 +3,22 @@ li.nav-item {
     list-style: none;
 }
 
+#connections_area {
+    position: relative;
+}
+
 #connections {
     width: 15rem;
     height: 2rem;
+    margin-left: 24px;
     font-size: 12pt;
+}
+
+#connection_loading {
+    position: absolute;
+    display: none;
+    left: -5px;
+    top: 4px;
 }
 
 #is_connected {

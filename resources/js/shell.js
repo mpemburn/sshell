@@ -4,6 +4,7 @@ jQuery(document).ready(function ($) {
         constructor() {
             this.connections = $('#connections');
             this.isConnected = $('#is_connected');
+            this.loading = $('#connection_loading');
 
             this.setDropdown();
 
@@ -14,6 +15,7 @@ jQuery(document).ready(function ($) {
             let connection = this.getUrlParam('connect');
 
             this.isConnected.toggle(connection !== null);
+            // this.loading.toggle(connection !== null);
 
             this.connections.children().each(function (){
                 if ($(this).text() === connection) {
@@ -35,6 +37,8 @@ jQuery(document).ready(function ($) {
                 let page = document.location.href.replace(document.location.search, '');
                 let selected = $('#connections').find('option:selected').text();
                 let query = (self.connections.val() !== '0') ? '?connect=' + selected : '';
+                self.loading.show();
+                self.isConnected.hide();
 
                 window.location = page + query
             })
