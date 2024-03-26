@@ -33,11 +33,11 @@ class Shell extends Component
 
         $result = $this->service->connect($connectionName);
         if ($result) {
-            $this->output = "Connected to {$connectionName}";
+            $this->output = "Connected to \"{$connectionName}\"";
             $this->connected = true;
         } else {
             $this->connected = false;
-            $this->output = "Connection to {$connectionName} failed: " . $this->service->getError();
+            $this->output = "Connection to \"{$connectionName}\" failed: " . $this->service->getError();
         }
     }
 

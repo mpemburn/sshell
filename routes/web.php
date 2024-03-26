@@ -1,14 +1,8 @@
 <?php
 
 use App\Http\Controllers\HomeController;
-use App\Models\Command;
-use App\Models\Connection;
-use App\Models\Modifier;
-use App\Services\ShellService;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use phpseclib3\Crypt\PublicKeyLoader;
-use phpseclib3\Net\SSH2;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,10 +16,6 @@ use phpseclib3\Net\SSH2;
 */
 
 Route::get('/dev', function () {
-    $connectName = 'Bogusx';
-    $connection = Connection::where('name', $connectName)->first();
-    !d($connection);
-
     // Do what thou wilt
 });
 

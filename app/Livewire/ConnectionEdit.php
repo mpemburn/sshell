@@ -4,7 +4,6 @@ namespace App\Livewire;
 
 use App\Models\Connection;
 use App\Services\ConnectionService;
-use App\Services\ScriptService;
 use App\Services\ShellService;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Connection;
 use App\Services\ShellService;
 use Illuminate\Http\Request;
 
@@ -26,7 +27,12 @@ class HomeController extends Controller
     {
         $connectionName = request('connect');
 
-        return view('shell', ['connect' => $connectionName]);
+        if (Connection::where('id', '>=', '1')->first()) {
+            return view('shell', ['connect' => $connectionName]);
+        }
+
+        return view('connection');
+
     }
 
     public function editConnection()
