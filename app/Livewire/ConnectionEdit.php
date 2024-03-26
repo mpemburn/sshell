@@ -6,6 +6,7 @@ use App\Models\Connection;
 use App\Services\ConnectionService;
 use App\Services\ScriptService;
 use App\Services\ShellService;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class ConnectionEdit extends Component
@@ -24,9 +25,10 @@ class ConnectionEdit extends Component
     public function editConnection(): void
     {
         if ($this->connectionId === 0) {
-            $this->name = '';
             return;
         }
+
+        $this->output = '';
 
         $connection = Connection::find($this->connectionId);
 
@@ -45,7 +47,8 @@ class ConnectionEdit extends Component
     public function test(): void
     {
         $this->loading = true;
-        $this->output = '';
+        $this->output = 'Testing...';
+
         $service = new ShellService();
         $output = $service->testConnection(
             $this->host,
@@ -56,6 +59,8 @@ class ConnectionEdit extends Component
 
         if ($output) {
             $this->output = $output;
+        } else {
+            $this->output = "Connection to \"{$this->name}\" failed: \n" . $service->getError();
         }
 
         $this->loading = false;
@@ -124,6 +129,7 @@ class ConnectionEdit extends Component
         $this->user = '';
         $this->keyPath = '';
         $this->passPhrase = '';
+        $this->output = '';
     }
 
     public function render()

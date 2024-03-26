@@ -45,7 +45,7 @@
                  height="24">
         </div>
     </div>
-    <pre id="terminal">{{ $output }}</pre>
+    <pre id="terminal" class="test">{{ $output }}</pre>
 </div>
 <script>
     $(document).ready(function ($) {

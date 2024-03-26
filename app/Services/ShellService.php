@@ -21,6 +21,7 @@ class ShellService
     public SSH2 $ssh;
     protected string $output = '';
     protected string $displayName;
+    protected string $error = '';
 
     public static function getConnections(): array
     {
@@ -66,24 +67,26 @@ class ShellService
     public function connect(string $connectName): bool
     {
         $connection = Connection::where('name', $connectName)->first();
-        $key =  $connection->key_path;
 
-        if ($connection === null || ! file_exists($key)) {
+        if ($connection === null) {
             return false;
         }
 
-        $key = PublicKeyLoader::load(file_get_contents($key), $connection->pass_phrase);
+        $key =  $connection->key_path;
+        if (! file_exists($key)) {
+            return false;
+        }
 
-        $this->ssh = new SSH2($connection->host);
-        $this->ssh->setTimeout(10);
         try {
+            $key = PublicKeyLoader::load(file_get_contents($key), $connection->pass_phrase);
+            $this->ssh = new SSH2($connection->host);
+            $this->ssh->setTimeout(10);
             $this->ssh->login($connection->user, $key);
         } catch (Exception $e) {
-            Log::debug($e->getMessage());
+            $this->error = $e->getMessage();
+
+            return false;
         }
-//        if (! $this->ssh->login($connection->user, $key)) {
-//            throw new Exception('Login failed');
-//        }
 
         $this->displayName = $connection->host . '@' . $connection->user;
 
@@ -96,18 +99,16 @@ class ShellService
             return null;
         }
 
-        $key = PublicKeyLoader::load(file_get_contents($keyPath), $passPhrase);
-        $ssh = new SSH2($host);
-        $ssh->setTimeout(10);
         try {
+            $key = PublicKeyLoader::load(file_get_contents($keyPath), $passPhrase);
+            $ssh = new SSH2($host);
             $ssh->login($username, $key);
             return $ssh->read('username@username:~$');
         } catch (Exception $e) {
-            Log::debug($e->getMessage());
+            $this->error = $e->getMessage();
 
-            return null;
+            return false;
         }
-
     }
 
     public function execute(string $command): bool|string
@@ -119,6 +120,11 @@ class ShellService
         }
 
         return $this->ssh->exec($command);
+    }
+
+    public function getError()
+    {
+        return $this->error;
     }
 
     protected function isDisallowed(string $command): bool

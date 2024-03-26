@@ -27,10 +27,17 @@ class Shell extends Component
 
     public function __construct()
     {
+        $connectionName = ShellService::getConnection();
         $this->service = new ShellService();
         $this->scriptService = new ScriptService();
-        if ($this->service->connect(ShellService::getConnection())) {
+
+        $result = $this->service->connect($connectionName);
+        if ($result) {
+            $this->output = "Connected to {$connectionName}";
             $this->connected = true;
+        } else {
+            $this->connected = false;
+            $this->output = "Connection to {$connectionName} failed: " . $this->service->getError();
         }
     }
 
