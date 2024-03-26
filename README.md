@@ -50,7 +50,7 @@ This will launch a server on `http://127.0.0.1:8000`
 
 ## How to Use Secure Shell:
 
-Once you have **Secure Shell** running in a browser, you first need
+Once you have **Secure Shell** running in a browser, you will first need
 to create a user account by clicking on **Register** in the top
 right corner.
 

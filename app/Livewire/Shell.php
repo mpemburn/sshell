@@ -19,7 +19,7 @@ class Shell extends Component
     public string $command = '';
     public string $modifier = '';
     public array $modifiers = [];
-    public bool $loading= false;
+    public bool $loading = false;
     public bool $shouldSaveModifier = false;
     public bool $showModifiers = false;
     public bool $disableModify = false;

@@ -90,6 +90,26 @@ class ShellService
         return true;
     }
 
+    public function testConnection(string $host, string $username, string $keyPath, string $passPhrase): ?string
+    {
+        if (! file_exists($keyPath)) {
+            return null;
+        }
+
+        $key = PublicKeyLoader::load(file_get_contents($keyPath), $passPhrase);
+        $ssh = new SSH2($host);
+        $ssh->setTimeout(10);
+        try {
+            $ssh->login($username, $key);
+            return $ssh->read('username@username:~$');
+        } catch (Exception $e) {
+            Log::debug($e->getMessage());
+
+            return null;
+        }
+
+    }
+
     public function execute(string $command): bool|string
     {
         $command = self::COMMAND_ALIASES[$command] ?? $command;

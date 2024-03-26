@@ -4,6 +4,8 @@ namespace App\Livewire;
 
 use App\Models\Connection;
 use App\Services\ConnectionService;
+use App\Services\ScriptService;
+use App\Services\ShellService;
 use Livewire\Component;
 
 class ConnectionEdit extends Component
@@ -14,8 +16,10 @@ class ConnectionEdit extends Component
     public string $user = '';
     public string $keyPath = '';
     public string $passPhrase = '';
+    public string $output = '';
     public bool $showDelete = false;
     public bool $showNewButton = true;
+    public bool $loading = false;
 
     public function editConnection(): void
     {
@@ -37,6 +41,24 @@ class ConnectionEdit extends Component
         $this->passPhrase = $connection->pass_phrase;
 
         $this->showDelete = true;
+    }
+    public function test(): void
+    {
+        $this->loading = true;
+        $this->output = '';
+        $service = new ShellService();
+        $output = $service->testConnection(
+            $this->host,
+            $this->user,
+            $this->keyPath,
+            $this->passPhrase
+        );
+
+        if ($output) {
+            $this->output = $output;
+        }
+
+        $this->loading = false;
     }
 
     public function save(): void
@@ -90,6 +112,7 @@ class ConnectionEdit extends Component
     {
         $this->connectionId = 0;
         $this->clearFields();
+        $this->output = '';
         $this->showDelete = false;
         $this->showNewButton = true;
     }

@@ -37,6 +37,15 @@
             <input id="pass_phrase" wire:model="passPhrase" placeholder="Pass Phrase"></input>
         </div>
     </div>
+    <div id="test_area">
+        <button class="term-btn float-right" wire:click="test">Test</button>
+        <div wire:loading>
+            <img id="loading"
+                 src="https://cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif" alt="" width="24"
+                 height="24">
+        </div>
+    </div>
+    <pre id="terminal">{{ $output }}</pre>
 </div>
 <script>
     $(document).ready(function ($) {
