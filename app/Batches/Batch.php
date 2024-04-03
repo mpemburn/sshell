@@ -11,6 +11,7 @@ abstract class Batch implements BatchInterface
 {
     protected array $commands = [];
     protected ?Collection $batch;
+    protected string $environment;
     protected ShellService $service;
 
     public function __construct()
@@ -18,12 +19,16 @@ abstract class Batch implements BatchInterface
         $this->service = new ShellService();
     }
 
-    /**
-     * @return Collection|null
-     */
     public function setConnection(string $connection): self
     {
         $this->service->connect($connection);
+
+        return $this;
+    }
+
+    public function setEnvironment(string $environment): self
+    {
+        $this->environment = $environment;
 
         return $this;
     }
@@ -59,6 +64,9 @@ abstract class Batch implements BatchInterface
     {
         $script = '';
         collect($this->commands)->each(function ($command) use ($item, &$script) {
+            if (str_contains($command, '{{ env }}')) {
+                $command = str_replace('{{ env }}', $this->environment, $command);
+            }
             if (str_contains($command, '{{ item }}')) {
                 $command = str_replace('{{ item }}', $item, $command);
             }

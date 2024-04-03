@@ -2,11 +2,13 @@
 
 namespace App\Batches;
 
-class HtaccessTestBatch extends Batch
+class HtaccessBatch extends Batch
 {
     protected array $commands = [
-        'cd ~/sites/www.testing.clarku.edu/wp-content',
+        'cd ~/{{ env }}/wp-content',
         'cp ./{{ item }} ./{{ item }}.bak',
-        'rm ./{{ item }}'
+        'rm ./{{ item }}',
+        'echo Done!'
+
     ];
 }

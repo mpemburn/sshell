@@ -2,8 +2,8 @@
 
 namespace App\Factories;
 
-use App\Batches\HtaccessTestBatch;
-use App\Batches\HtaccessTestRestoreBatch;
+use App\Batches\HtaccessBatch;
+use App\Batches\HtaccessRestoreBatch;
 use App\Interfaces\BatchInterface;
 
 class BatchFactory
@@ -11,8 +11,8 @@ class BatchFactory
     public static function build(string $process): BatchInterface
     {
         return match ($process) {
-            'hta_test' => new HtaccessTestBatch(),
-            'hta_test_restore' => new HtaccessTestRestoreBatch(),
+            'hta_remove' => new HtaccessBatch(),
+            'hta_restore' => new HtaccessRestoreBatch(),
         };
     }
 }
