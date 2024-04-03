@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\MyCustomEvent;
 use App\Models\Connection;
 use Exception;
 use Illuminate\Support\Facades\Log;

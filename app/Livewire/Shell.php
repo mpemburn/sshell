@@ -13,7 +13,6 @@ class Shell extends Component
 {
     protected ShellService $service;
     protected ScriptService $scriptService;
-
     public bool $connected = false;
     public string $output = '';
     public string $command = '';
@@ -47,6 +46,8 @@ class Shell extends Component
             $this->output = 'Please enter a command.';
             return;
         }
+
+        $this->service->sendAlert('basic', 'Howdy pardner!');
 
         $this->output = $this->service->execute($this->command);
     }
