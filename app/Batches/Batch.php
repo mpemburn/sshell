@@ -11,7 +11,7 @@ abstract class Batch implements BatchInterface
 {
     protected array $commands = [];
     protected ?Collection $batch;
-    protected string $environment;
+    protected ?string $workingDir = null;
     protected ShellService $service;
 
     public function __construct()
@@ -19,16 +19,20 @@ abstract class Batch implements BatchInterface
         $this->service = new ShellService();
     }
 
-    public function setConnection(string $connection): self
+    public function setConnection(?string $connection): self
     {
-        $this->service->connect($connection);
+        if ($connection) {
+            $this->service->connect($connection);
+        }
 
         return $this;
     }
 
-    public function setEnvironment(string $environment): self
+    public function setWorkingDirectory(?string $workingDir): self
     {
-        $this->environment = $environment;
+        if ($workingDir) {
+            $this->workingDir = $workingDir;
+        }
 
         return $this;
     }
@@ -53,6 +57,15 @@ abstract class Batch implements BatchInterface
             if (empty($item)) {
                 return;
             }
+            /* The connection and environment can be set
+                at the top of the batch file ([name].txt:
+                conn=[predefined connection]
+                dir=[working directory]
+            */
+            if ($this->setVarsFromBatchFile($item)) {
+                return;
+            }
+
             $script = $this->buildScript($item);
 
             echo $this->service->execute($script) . PHP_EOL;
@@ -60,12 +73,30 @@ abstract class Batch implements BatchInterface
 
     }
 
+    protected function setVarsFromBatchFile(string $item): bool
+    {
+        $var = preg_replace('/([\w]+=)(.*)/', '$2', $item);
+
+        if (str_starts_with($item, 'conn=')) {
+            $this->setConnection($var);
+
+            return true;
+        }
+        if (str_starts_with($item, 'dir=')) {
+            $this->setWorkingDirectory($var);
+
+            return true;
+        }
+
+        return false;
+    }
+
     protected function buildScript(string $item): string
     {
         $script = '';
         collect($this->commands)->each(function ($command) use ($item, &$script) {
-            if (str_contains($command, '{{ env }}')) {
-                $command = str_replace('{{ env }}', $this->environment, $command);
+            if ($this->workingDir && str_contains($command, '{{ env }}')) {
+                $command = str_replace('{{ env }}', $this->workingDir, $command);
             }
             if (str_contains($command, '{{ item }}')) {
                 $command = str_replace('{{ item }}', $item, $command);

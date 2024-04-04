@@ -9,41 +9,32 @@ use Illuminate\Support\Facades\Storage;
 
 class BatchProcessCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'app:batch {--conn=} {--env=} {--batch=} {--process=}';
+    protected $signature = 'app:batch {--conn=} {--dir=} {--batch=} {--process=}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
+    protected $description = 'Batch process shell commands';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        // conn must be the name of an existing connection
+        // conn must be the name of an existing connection (can be set in batch file with conn=)
         $connection = $this->option('conn');
-        // env is the directory path
-        $env = $this->option('env');
-        // batch is a text file with appropriate command strings
+        // dir is the directory path (can be set in batch file with dir=)
+        $dir = $this->option('dir');
+        // batch is a text file with appropriate command strings. Leave off .txt extension
         $batchName = $this->option('batch');
         // process is the key string to access a Batch class
         $process = $this->option('process');
 
+        // File must be located in /storage/app/batches
         $batchFile = Storage::path('batches/' . $batchName . '.txt');
 
         // Get an instance of the appropriate Batch class
         $batch = BatchFactory::build($process);
 
         $batch->setConnection($connection)
-            ->setEnvironment($env)
+            ->setWorkingDirectory($dir)
             ->getBatchFile($batchFile)
             ->run();
     }

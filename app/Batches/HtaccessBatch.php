@@ -5,10 +5,8 @@ namespace App\Batches;
 class HtaccessBatch extends Batch
 {
     protected array $commands = [
-        'cd ~/{{ env }}/wp-content',
+        'cd {{ env }}',
         'cp ./{{ item }} ./{{ item }}.bak',
         'rm ./{{ item }}',
-        'echo Done!'
-
     ];
 }
