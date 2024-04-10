@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Storage;
 class BatchProcessCommand extends Command
 {
     protected $signature = 'app:batch {--conn=} {--dir=} {--batch=} {--process=}';
+    // artisan app:batch --batch=htaccess_test --process=hta_remove
+    // artisan app:batch --batch=htaccess_prod --process=hta_remove
+    // artisan app:batch --batch=htaccess_test --process=hta_restore
+    // artisan app:batch --batch=htaccess_prod --process=hta_restore
 
     protected $description = 'Batch process shell commands';
 
