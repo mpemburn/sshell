@@ -47,8 +47,6 @@ class Shell extends Component
             return;
         }
 
-        $this->service->sendAlert('basic', 'Howdy pardner!');
-
         $this->output = $this->service->execute($this->command);
     }
 

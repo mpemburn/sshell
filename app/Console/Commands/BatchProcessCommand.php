@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Batches\HtaccessBatch;
 use App\Factories\BatchFactory;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
